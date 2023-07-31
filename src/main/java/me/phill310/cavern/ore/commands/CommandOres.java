@@ -88,6 +88,7 @@ public class CommandOres implements TabExecutor, Listener {
     @EventHandler
     public void onClick(InventoryClickEvent event) {
         Inventory inv = event.getClickedInventory();
+        if (inv == null) return;
 
         ItemStack testItem = inv.getItem(inv.getSize()-8);
         if (testItem == null) return;
