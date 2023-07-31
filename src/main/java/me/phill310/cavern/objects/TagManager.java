@@ -64,6 +64,7 @@ public class TagManager {
         if (!profile.hasTag(name)) {
             Tag tag = getTag(name, System.currentTimeMillis());
             profile.addTag(tag);
+            ProfileManager.saveProfile(profile);
             player.sendMessage(mm.deserialize("<gray>[<yellow>Tags<gray>] <white>You have unlocked a new tag: ").append(tag.getDisplay()));
         }
     }

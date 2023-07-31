@@ -54,7 +54,7 @@ public class CommandTag implements TabExecutor, Listener {
                     if (TagManager.isTag(tag)) {
                         Profile profile = ProfileManager.loadProfile(target.getUniqueId());
                         if (!profile.hasTag(tag)) {
-                            TagManager.giveTag(player, tag);
+                            TagManager.giveTag(target, tag);
                             player.sendMessage(mm.deserialize("<white>Gave <aqua>" + target.getName() + "<white> the tag <yellow>" + tag));
                         } else {
                             player.sendMessage(mm.deserialize("<aqua>" + target.getName() + " <red>already has this tag!"));
@@ -78,7 +78,7 @@ public class CommandTag implements TabExecutor, Listener {
                     if (TagManager.isTag(tag)) {
                         Profile profile = ProfileManager.loadProfile(target.getUniqueId());
                         if (profile.hasTag(tag)) {
-                            TagManager.takeTag(player, tag);
+                            TagManager.takeTag(target, tag);
                             player.sendMessage(mm.deserialize("<aqua>" + target.getName() + "<white> no longer has the tag " + tag));
                         } else {
                             player.sendMessage(mm.deserialize("<aqua>" + target.getName() + " <red>already doesn't have this tag!"));
@@ -135,7 +135,7 @@ public class CommandTag implements TabExecutor, Listener {
     }
     private void open(Player player, int page) {
         Profile profile = ProfileManager.loadProfile(player.getUniqueId());
-        int size = (int) ((Math.ceil(((double) profile.getTags().size())/9d)+1))*9;
+        int size = (int) ((Math.ceil(((double) TagManager.getTags().size())/9d)+1))*9;
         boolean next = false;
         if (size >= 54) {
             size = 54;
@@ -200,6 +200,7 @@ public class CommandTag implements TabExecutor, Listener {
     @EventHandler
     public void onClick(InventoryClickEvent event) {
         Inventory inv = event.getClickedInventory();
+        if (inv == null) return;
         ItemStack testItem = inv.getItem(inv.getSize()-8);
         if (testItem == null) return;
         if ((Utils.readString(testItem, "inv") == null) || (!Utils.readString(testItem, "inv").equals("tags"))) return;
