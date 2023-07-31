@@ -84,8 +84,11 @@ public class ProfileManager implements Listener {
             File playerFile = new File(profileFolder, profile.getUuid() + ".yml");
             FileConfiguration config = YamlConfiguration.loadConfiguration(playerFile);
             config.set("uuid", profile.getUuid().toString());
-            if (profile.hasTag()) {
-                config.set("tag", mm.serialize(profile.getTag().getDisplay()));
+            if (profile.hasSelectedTag()) {
+                config.set("tag", profile.getSelectedTag().getName());
+            }
+            for (Tag tag : profile.getTags().values()) {
+                config.set("tags." + tag.getName(), tag.getUnlocked());
             }
 
             try {

@@ -2,6 +2,7 @@ package me.phill310.cavern;
 
 import me.phill310.cavern.objects.OreManager;
 import me.phill310.cavern.objects.ProfileManager;
+import me.phill310.cavern.objects.TagManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
@@ -14,6 +15,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class CommandCavern implements TabExecutor {
+    private final Main plugin = Main.getPlugin(Main.class);
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (args.length > 0) {
@@ -42,9 +44,18 @@ public class CommandCavern implements TabExecutor {
                         ProfileManager.setup();
                         sender.sendMessage("Profiles have been reloaded!");
                     }
+                    if (args[1].equalsIgnoreCase("all") || args[1].equalsIgnoreCase("config")) {
+                        plugin.reloadConfig();
+                        sender.sendMessage("Config has been reloaded");
+                    }
+                    if (args[1].equalsIgnoreCase("all") || args[1].equalsIgnoreCase("tags")) {
+                        TagManager.reload();
+                    }
                 } else {
+                    plugin.reloadConfig();
                     ProfileManager.setup();
                     OreManager.setup();
+                    TagManager.reload();
                     sender.sendMessage("Everything has been reloaded!");
                 }
             }
@@ -61,6 +72,9 @@ public class CommandCavern implements TabExecutor {
             Collections.addAll(commands, "reload", "save");
             StringUtil.copyPartialMatches(args[0], commands, completions);
         } else if (args.length == 2) {
+            if (args[0].equalsIgnoreCase("reload")) {
+                commands.add("config");
+            }
             Collections.addAll(commands, "ore", "profile", "all");
             StringUtil.copyPartialMatches(args[1], commands, completions);
         }

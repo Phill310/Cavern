@@ -6,10 +6,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 public class OreManager {
-    private static final HashMap<Material, Ore> ores = new HashMap<>();
+    private static final LinkedHashMap<Material, Ore> ores = new LinkedHashMap<>();
     private static final Main plugin = Main.getPlugin(Main.class);
 
     public static void setup() {
@@ -21,8 +21,6 @@ public class OreManager {
         for (String key: config.getConfigurationSection("ores").getKeys(false)) {
             Ore ore = new Ore(config.getConfigurationSection("ores." + key));
             ores.put(ore.getType(), ore);
-            Bukkit.broadcast(Component.text("Added " + ore.getType()));
-            if (ore.hasDrop()) Bukkit.broadcast(Component.text("Had a drop " + ore.getDrop()));
         }
 
     }
@@ -58,7 +56,7 @@ public class OreManager {
         return ores.size();
     }
 
-    public static HashMap<Material, Ore> getOres() {
+    public static LinkedHashMap<Material, Ore> getOres() {
         return ores;
     }
 

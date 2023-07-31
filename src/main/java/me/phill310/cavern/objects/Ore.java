@@ -1,11 +1,18 @@
 package me.phill310.cavern.objects;
 
+import me.phill310.cavern.Utils;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Ore {
+    private final MiniMessage mm = MiniMessage.miniMessage();
     private final Material type;
     private double cooldown;
     private int pickLevel;
@@ -71,7 +78,12 @@ public class Ore {
         this.drop = drop;
     }
     public ItemStack getDrop() {
-        return drop;
+        ItemStack item = drop.clone();
+        List<Component> lore = item.lore();
+        if (lore == null) lore = new ArrayList<>();
+        lore.add(mm.deserialize("<gray>Worth: <green>$" + worth));
+        item.lore(lore);
+        return Utils.addInt(item, "worth", worth);
     }
     public boolean hasDrop() {
         return drop != null;

@@ -25,10 +25,8 @@ public class BlockBreak implements Listener {
         block.setType(Material.BEDROCK);
         if (ore.hasDrop()) {
             Utils.give(player, ore.getDrop());
-            player.sendMessage("Gave you " + ore.getDrop());
         }
         Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> block.setType(ore.getType()), (long) ore.getCooldown()*20);
-
     }
 
 }

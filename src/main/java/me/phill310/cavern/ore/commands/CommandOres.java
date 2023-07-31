@@ -17,6 +17,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -54,7 +55,6 @@ public class CommandOres implements TabExecutor, Listener {
     }
     private void open(Player player, int page) {
         int size = (int) ((Math.ceil(((double) OreManager.oreCount())/9d)+1))*9;
-        Bukkit.broadcast(Component.text(size));
         boolean next = false;
         if (size >= 54) {
             size = 54;
@@ -62,7 +62,6 @@ public class CommandOres implements TabExecutor, Listener {
         }
         Inventory inv = Bukkit.createInventory(null, size, mm.deserialize("<blue><b>Ore Info (Page " + page + ")"));
         for (Ore ore : OreManager.getOres().values()) {
-            Bukkit.broadcast(Component.text("Adding " + ore.getType()));
             ItemStack item = Utils.buildItem(ore.getType(), 1, "<aqua><b>" + Utils.toTitleCase(ore.getType().toString().toLowerCase().replace("_", " ")), "<yellow>Respawn time: <white>" + Utils.formatDec(ore.getCooldown()) + "s", "<yellow>Pickaxe Level: <white>" + ore.getPickLevel(), "<yellow>Worth: <green>$" + ore.getWorth());
             if (player.hasPermission("cavern.admin")) {
                 ItemMeta meta = item.getItemMeta();
@@ -89,9 +88,10 @@ public class CommandOres implements TabExecutor, Listener {
     @EventHandler
     public void onClick(InventoryClickEvent event) {
         Inventory inv = event.getClickedInventory();
+
         ItemStack testItem = inv.getItem(inv.getSize()-8);
         if (testItem == null) return;
-        if (!Utils.readString(testItem, "inv").equals("ore")) return;
+        if ((Utils.readString(testItem, "inv") == null) || (!Utils.readString(testItem, "inv").equals("ore"))) return;
         event.setCancelled(true);
         Player player = (Player) event.getWhoClicked();
         ItemStack item = event.getCurrentItem();
@@ -106,9 +106,7 @@ public class CommandOres implements TabExecutor, Listener {
                         player.sendMessage(mm.deserialize(Utils.toTitleCase(ore.getType().toString().toLowerCase().replace("_", " ")) + " will not drop anything."));
                         ore.setDrop(null);
                     } else {
-                        player.sendMessage("Item: " + player.getInventory().getItemInMainHand());
-                        ore.setDrop(player.getInventory().getItemInMainHand());
-                        player.sendMessage("Ore: " + ore.getDrop());
+                        ore.setDrop(player.getInventory().getItemInMainHand().clone());
                         player.sendMessage(mm.deserialize(Utils.toTitleCase(ore.getType().toString().toLowerCase().replace("_", " ")) + " will now drop " + ore.getDrop().getType().toString().toLowerCase().replace("_", " ")));
                     }
                     OreManager.saveOre(ore);

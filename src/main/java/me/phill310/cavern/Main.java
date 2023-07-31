@@ -4,6 +4,7 @@ import me.phill310.cavern.chat.PlayerChat;
 import me.phill310.cavern.chat.commands.CommandTag;
 import me.phill310.cavern.objects.OreManager;
 import me.phill310.cavern.objects.ProfileManager;
+import me.phill310.cavern.objects.TagManager;
 import me.phill310.cavern.ore.BlockBreak;
 import me.phill310.cavern.ore.commands.CommandOres;
 import net.milkbowl.vault.chat.Chat;
@@ -42,7 +43,9 @@ public final class Main extends JavaPlugin {
 
         //chat
         manager.registerEvents(new PlayerChat(), this);
-        this.getCommand("tag").setExecutor(new CommandTag());
+        CommandTag commandTag = new CommandTag();
+        manager.registerEvents(commandTag, this);
+        this.getCommand("tag").setExecutor(commandTag);
 
 
         //ore
@@ -58,6 +61,7 @@ public final class Main extends JavaPlugin {
         log.info("We Gucci");
         ProfileManager.setup();
         OreManager.setup();
+        TagManager.setup();
 
         //TODO: save the profiles every x minutes
     }

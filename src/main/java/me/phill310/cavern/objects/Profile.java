@@ -1,10 +1,8 @@
 package me.phill310.cavern.objects;
 
-import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -25,11 +23,14 @@ public class Profile {
 
     public Profile(FileConfiguration data) {
         this.uuid = UUID.fromString(data.getString("uuid"));
-        for (String key: data.getConfigurationSection("tags").getKeys(false)) {
-            tags.put(key, new Tag(key, data.getLong("tags." + key)));
+        if (data.getConfigurationSection("tags") != null) {
+            for (String key: data.getConfigurationSection("tags").getKeys(false)) {
+                tags.put(key, TagManager.getTag(key, data.getLong("tags." + key)));
+            }
+            tag = (data.getString("tag") != null) ? tags.get(data.getString("tag")) : null;
         }
         //nick = (data.getString("nick") == null) ? mm.deserialize(data.getString("nick")) : null;
-        tag = (data.getString("tag") != null) ? tags.get(data.getString("tag")) : null;
+
     }
 
     public UUID getUuid() { return uuid; }
@@ -38,9 +39,20 @@ public class Profile {
     public Component getNick() { return nick; }
     public void setNick(Component nick) { this.nick = nick; }*/
 
-    public boolean hasTag() { return tag != null; }
-    public Tag getTag() { return tag; }
-    public void setTag(Tag tag) { this.tag = tag; }
+    public boolean hasSelectedTag() { return tag != null; }
+    public Tag getSelectedTag() { return tag; }
+    public void setSelectedTag(Tag tag) { this.tag = tag; }
+
+    public HashMap<String, Tag> getTags() { return tags; }
+    public void addTag(Tag tag) { tags.put(tag.getName(), tag); }
+    public void removeTag(Tag tag) { tags.remove(tag.getName()); }
+    public Tag removeTag(String tag) { return tags.remove(tag); }
+    public boolean hasTag(String name) {
+        return tags.containsKey(name);
+    }
+    public Tag getTag(String name) {
+        return tags.get(name);
+    }
 
     public String getChatcolor() { return chatcolor; }
     public void setChatcolor(String chatcolor) { this.chatcolor = chatcolor; }
