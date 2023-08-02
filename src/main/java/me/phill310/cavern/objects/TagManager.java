@@ -74,6 +74,7 @@ public class TagManager {
         if (profile.hasTag(name)) {
             Tag tag = profile.removeTag(name);
             if (profile.hasSelectedTag()) if (profile.getSelectedTag().equals(tag)) profile.setSelectedTag(null);
+            ProfileManager.saveProfile(profile);
             player.sendMessage(mm.deserialize("<gray>[<yellow>Tags<gray>] <white>You have lost a tag: ").append(tag.getDisplay()));
         }
     }

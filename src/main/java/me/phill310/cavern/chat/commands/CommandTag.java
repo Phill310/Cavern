@@ -45,6 +45,10 @@ public class CommandTag implements TabExecutor, Listener {
                     if (args.length >= 3) {
                         target = Bukkit.getPlayer(args[1]);
                         tag = args[2];
+                        if (target == null) {
+                            player.sendMessage(mm.deserialize("<red>Couldn't find <yellow>" + args[1]));
+                            return true;
+                        }
                     } else if (args.length == 2) {
                         target = player;
                         tag = args[1];
@@ -68,6 +72,10 @@ public class CommandTag implements TabExecutor, Listener {
                     String tag;
                     if (args.length >= 3) {
                         target = Bukkit.getPlayer(args[1]);
+                        if (target == null) {
+                            player.sendMessage(mm.deserialize("<red>Couldn't find <yellow>" + args[1]));
+                            return true;
+                        }
                         tag = args[2];
                     } else if (args.length == 2) {
                         target = player;
@@ -91,6 +99,37 @@ public class CommandTag implements TabExecutor, Listener {
                 }
             } else {
                 open(player);
+            }
+        } else {
+            if (args.length >= 3) {
+                Player target = Bukkit.getPlayer(args[1]);
+                if (target == null) {
+                    commandSender.sendMessage(mm.deserialize("<red>Couldn't find <yellow>" + args[1]));
+                    return true;
+                }
+                if (!TagManager.isTag(args[2])) {
+                    commandSender.sendMessage(args[2] + " is not a valid tag!");
+                    return true;
+                }
+                Profile profile = ProfileManager.loadProfile(target.getUniqueId());
+                if (args[0].equalsIgnoreCase("give")) {
+                    if (profile.hasTag(args[2])) {
+                        commandSender.sendMessage(target.getName() + "already has this tag!");
+                    } else {
+                        TagManager.giveTag(target, args[2]);
+                        commandSender.sendMessage("Gave " + target.getName() + " tag " + args[2]);
+                    }
+                } else if (args[0].equalsIgnoreCase("remove")) {
+                    if (!profile.hasTag(args[2])) {
+                        commandSender.sendMessage(target.getName() + " doesn't have this tag!");
+                    } else {
+                        TagManager.takeTag(target, args[2]);
+                        commandSender.sendMessage("Removed " + target.getName() + "'s tag " + args[2]);
+                    }
+                }
+            } else {
+                commandSender.sendMessage("/tag <give/remove> <tag>");
+                return true;
             }
         }
 
