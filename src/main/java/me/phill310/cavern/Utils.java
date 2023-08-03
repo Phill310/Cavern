@@ -14,7 +14,6 @@ import javax.annotation.Nullable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -89,7 +88,7 @@ public class Utils {
     }
 
     public static String toTitleCase(String givenString) {
-        String[] arr = givenString.split(" ");
+        String[] arr = givenString.toLowerCase().split(" ");
         StringBuilder sb = new StringBuilder();
 
         for (String s : arr) {
@@ -124,6 +123,10 @@ public class Utils {
         meta.getPersistentDataContainer().set(new NamespacedKey(plugin, key), PersistentDataType.STRING, value);
         item.setItemMeta(meta);
         return item;
+    }
+
+    public static void addString(ItemMeta meta, String key, String value) {
+        meta.getPersistentDataContainer().set(new NamespacedKey(plugin, key), PersistentDataType.STRING, value);
     }
 
     public static String readString(ItemStack item, String key) {

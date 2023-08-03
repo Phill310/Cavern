@@ -1,10 +1,8 @@
 package me.phill310.cavern.objects;
 
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import java.util.HashMap;
-import java.util.UUID;
+import java.util.*;
 
 public class Profile {
 
@@ -13,12 +11,13 @@ public class Profile {
     //private Component nick = null;
     private final HashMap<String, Tag> tags = new HashMap<>();
     private Tag tag = null;
-    private String chatcolor = "#AAAAAA";
-
-    private final MiniMessage mm = MiniMessage.miniMessage();
+    private String chatcolor = "gray";
+    private List<String> colors = new ArrayList<>();
+    private boolean bold;
 
     public Profile(UUID uuid) {
         this.uuid = uuid;
+        colors.add("gray");
     }
 
     public Profile(FileConfiguration data) {
@@ -29,6 +28,10 @@ public class Profile {
             }
             tag = (data.getString("tag") != null) ? tags.get(data.getString("tag")) : null;
         }
+        colors = data.getStringList("colors");
+        if (!colors.contains("gray")) colors.add("gray");
+        chatcolor = data.getString("chatcolor", "gray");
+        bold = data.getBoolean("bold", false);
         //nick = (data.getString("nick") == null) ? mm.deserialize(data.getString("nick")) : null;
 
     }
@@ -56,4 +59,17 @@ public class Profile {
 
     public String getChatcolor() { return chatcolor; }
     public void setChatcolor(String chatcolor) { this.chatcolor = chatcolor; }
+
+    public List<String> getColors() { return colors; }
+    public void addColor(String color) { colors.add(color); }
+    public void removeColor(String color) {
+        colors.remove(color);
+        if (chatcolor.equals(color)) chatcolor = "gray";
+        if (chatcolor.equals("bold")) if (isBold()) toggleBold();
+    }
+    public boolean hasColor(String color) { return colors.contains(color); }
+
+    public boolean isBold() { return bold; }
+
+    public void toggleBold() { bold = !bold; }
 }

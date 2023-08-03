@@ -11,8 +11,8 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
-import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.entity.Player;
@@ -45,7 +45,6 @@ public class PlayerChat implements Listener {
             output = output.append(mm.deserialize("<reset>").append(sourceDisplayName).append(Component.space())).hoverEvent(HoverEvent.showText(mm.deserialize(chat.getPlayerPrefix(source) + "<reset> " + source.getName() + "\n<white>Balance: <green>$" + eco.getBalance(source) + "\n\n<white><u>Click to Message " + source.getName()))).clickEvent(ClickEvent.suggestCommand("/w " + source.getName() + " "));
 
             if (profile.hasSelectedTag()) {
-                //Bukkit.broadcast(Component.text("Has a tag"));
                 Tag tag = profile.getSelectedTag();
                 Component hover = tag.getDisplay();
                 hover = hover.hoverEvent(
@@ -60,25 +59,14 @@ public class PlayerChat implements Listener {
             }
 
             Component msg = message.hoverEvent(null);
-            msg = msg.color(TextColor.fromHexString(profile.getChatcolor()));
+            msg = mm.deserialize("<" + profile.getChatcolor() + ">" + (profile.isBold() ? "<bold>" : "") + "<msg>", Placeholder.component("msg", msg));
             if (source.hasPermission("chat.admin")) {
-                msg = mm.deserialize("<reset><white>" + ((TextComponent) message).content());
+                msg = mm.deserialize("<reset><" + profile.getChatcolor() + ">" + ((TextComponent) message).content());
             }
 
             output = output.append(mm.deserialize("<gray><b>≫</b> ")).append(msg);
 
             return output;
-
-
-            /*return mm.deserialize(
-                    "<tag> <prefix> <display_name> <gray><b>≫</b> <message>",
-                    Placeholder.parsed("player", "<reset>" + source.getName()),
-                    Placeholder.component("tag", mm.deserialize("<reset><red>Test Tag").hoverEvent(HoverEvent.showText(mm.deserialize("<red>Test Tag\nObtained on 6/13")))),
-                    Placeholder.component("display_name", mm.deserialize("<reset>").append(sourceDisplayName).hoverEvent(HoverEvent.showText(mm.deserialize(chat.getPlayerPrefix(source) + " " + source.getName() + "\n<green>$4.20m\n\n<o>Click to Message " + source.getName()))).clickEvent(ClickEvent.suggestCommand("/w " + source.getName() + " "))),
-                    Placeholder.parsed("prefix", "<reset>" + chat.getPlayerPrefix(source)),
-                    Placeholder.parsed("suffix", "<reset>" + chat.getPlayerSuffix(source)),
-                    Placeholder.component("message", msg)
-            );*/
         }
     }
 }

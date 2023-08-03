@@ -1,6 +1,7 @@
 package me.phill310.cavern;
 
 import me.phill310.cavern.chat.PlayerChat;
+import me.phill310.cavern.chat.commands.CommandChatcolor;
 import me.phill310.cavern.chat.commands.CommandTag;
 import me.phill310.cavern.objects.OreManager;
 import me.phill310.cavern.objects.ProfileManager;
@@ -13,6 +14,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.Random;
 import java.util.logging.Logger;
 
 public final class Main extends JavaPlugin {
@@ -22,6 +24,8 @@ public final class Main extends JavaPlugin {
     public static final Logger log = Logger.getLogger("Minecraft");
 
     public final PluginManager manager = getServer().getPluginManager();
+
+    public static Random random = new Random();
 
     @Override
     public void onEnable() {
@@ -46,6 +50,9 @@ public final class Main extends JavaPlugin {
         CommandTag commandTag = new CommandTag();
         manager.registerEvents(commandTag, this);
         this.getCommand("tag").setExecutor(commandTag);
+        CommandChatcolor commandChatcolor = new CommandChatcolor();
+        this.getCommand("chatcolor").setExecutor(commandChatcolor);
+        manager.registerEvents(commandChatcolor, this);
 
 
         //ore

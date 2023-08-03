@@ -10,6 +10,9 @@ commands:
   tag:
     description: Opens tag menu
     aliases: tags
+  chatcolor:
+    description: Change your chatcolor
+    aliases: chatcolors
   ore:
     description: Opens a menu with all of the ores
     aliases: ores

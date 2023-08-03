@@ -90,6 +90,11 @@ public class ProfileManager implements Listener {
             for (Tag tag : profile.getTags().values()) {
                 config.set("tags." + tag.getName(), tag.getUnlocked());
             }
+            config.set("chatcolor", profile.getChatcolor());
+            if (profile.getColors().size() != 0) {
+                config.set("colors", profile.getColors());
+            }
+            if (profile.isBold()) config.set("bold", true);
 
             try {
                 config.save(playerFile);
