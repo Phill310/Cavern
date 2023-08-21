@@ -4,7 +4,6 @@ import me.phill310.cavern.Main;
 import me.phill310.cavern.Utils;
 import me.phill310.cavern.objects.Profile;
 import me.phill310.cavern.objects.ProfileManager;
-import me.phill310.cavern.objects.Tag;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -152,7 +151,7 @@ public class CommandChatcolor implements Listener, TabExecutor {
                     sender.sendMessage(mm.deserialize("<red>Couldn't find <yellow>" + args[1]));
                     return true;
                 }
-                String colorName = String.join(" ", Arrays.copyOfRange(args, 2, args.length)).toLowerCase();;
+                String colorName = String.join(" ", Arrays.copyOfRange(args, 2, args.length)).toLowerCase();
                 if (!names.containsKey(colorName)) {
                     sender.sendMessage(colorName + " is not a valid chatcolor!");
                     return true;
@@ -256,18 +255,19 @@ public class CommandChatcolor implements Listener, TabExecutor {
 
 
         String color = randColor();
-        String lore = "";
+        String lore;
+        String lore2 = "";
         boolean tag = false;
         if (profile.hasColor("random")) {
             if (profile.getChatcolor().startsWith("c:")) {
-                lore = "\n<green>Active";
+                lore2 = "<green>Active";
             }
-            lore = "<gray>Click to set your chatcolor to <" + color + ">" + color.replace("c:", "") + lore;
+            lore = "<gray>Click to set your chatcolor to <" + color + ">" + color.replace("c:", "");
             tag = true;
         } else {
             lore = "<red>Locked";
         }
-        ItemStack rand = Utils.buildItem(Material.SUSPICIOUS_STEW, 1, "<" + color + ">Random Color", lore);
+        ItemStack rand = Utils.buildItem(Material.SUSPICIOUS_STEW, 1, "<" + color + ">Random Color", lore, lore2);
         if (tag) Utils.addString(rand, "color", color);
         inv.setItem(37, rand);
 
