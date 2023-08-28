@@ -1,13 +1,10 @@
-package me.phill310.cavern.ore.commands;
+package me.phill310.cavern.mine.commands;
 
 import me.phill310.cavern.Utils;
 import me.phill310.cavern.objects.Ore;
 import me.phill310.cavern.objects.OreManager;
-import me.phill310.cavern.objects.Profile;
-import me.phill310.cavern.objects.ProfileManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -17,7 +14,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -60,7 +56,7 @@ public class CommandOres implements TabExecutor, Listener {
             size = 54;
             next = true;
         }
-        Inventory inv = Bukkit.createInventory(null, size, mm.deserialize("<blue><b>Ore Info (Page " + page + ")"));
+        Inventory inv = Bukkit.createInventory(null, size, mm.deserialize("<blue><b>Ore Info" + ((page != 0) ? " (Page " + page + ")" : "")));
         for (Ore ore : OreManager.getOres().values()) {
             ItemStack item = Utils.buildItem(ore.getType(), 1, "<aqua><b>" + Utils.toTitleCase(ore.getType().toString().toLowerCase().replace("_", " ")), "<yellow>Respawn time: <white>" + Utils.formatDec(ore.getCooldown()) + "s", "<yellow>Pickaxe Level: <white>" + ore.getPickLevel(), "<yellow>Worth: <green>$" + ore.getWorth());
             if (player.hasPermission("cavern.admin")) {
