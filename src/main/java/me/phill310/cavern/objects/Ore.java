@@ -81,7 +81,7 @@ public class Ore {
         ItemStack item = drop.clone();
         List<Component> lore = item.lore();
         if (lore == null) lore = new ArrayList<>();
-        lore.add(mm.deserialize("<gray>Worth: <green>$" + worth));
+        lore.add(mm.deserialize("<!i><gray>Worth: <green>$" + worth));
         item.lore(lore);
         return Utils.addInt(item, "worth", worth);
     }
