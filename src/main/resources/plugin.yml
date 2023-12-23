@@ -19,3 +19,5 @@ commands:
   cavern:
     description: Base command
     permission: cavern.admin
+  test:
+    permission: op

@@ -6,8 +6,8 @@ import me.phill310.cavern.chat.commands.CommandTag;
 import me.phill310.cavern.objects.OreManager;
 import me.phill310.cavern.objects.ProfileManager;
 import me.phill310.cavern.objects.TagManager;
-import me.phill310.cavern.ore.BlockBreak;
-import me.phill310.cavern.ore.commands.CommandOres;
+import me.phill310.cavern.mine.BlockBreak;
+import me.phill310.cavern.mine.commands.CommandOres;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.plugin.PluginManager;
@@ -64,6 +64,7 @@ public final class Main extends JavaPlugin {
         //misc
         this.getCommand("cavern").setExecutor(new CommandCavern());
         manager.registerEvents(new ProfileManager(), this);
+        this.getCommand("test").setExecutor(new CommandTest());
 
         log.info("We Gucci");
         ProfileManager.setup();

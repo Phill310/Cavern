@@ -1,4 +1,4 @@
-package me.phill310.cavern.ore;
+package me.phill310.cavern.mine;
 
 import me.phill310.cavern.Main;
 import me.phill310.cavern.Utils;
