@@ -118,6 +118,25 @@ public class Utils {
         return null;
     }
 
+    public static ItemStack addDouble(ItemStack item, String key, double value) {
+        ItemMeta meta = item.getItemMeta();
+        meta.getPersistentDataContainer().set(new NamespacedKey(plugin, key), PersistentDataType.DOUBLE, value);
+        item.setItemMeta(meta);
+        return item;
+    }
+
+    public static Double readDouble(ItemStack item, String key) {
+        if (item == null) return null;
+        if (item.hasItemMeta()) {
+            ItemMeta meta = item.getItemMeta();
+            PersistentDataContainer pdc = meta.getPersistentDataContainer();
+            if (pdc.has(new NamespacedKey(plugin, key))) {
+                return pdc.get(new NamespacedKey(plugin, key), PersistentDataType.DOUBLE);
+            }
+        }
+        return null;
+    }
+
     public static ItemStack addString(ItemStack item, String key, String value) {
         ItemMeta meta = item.getItemMeta();
         meta.getPersistentDataContainer().set(new NamespacedKey(plugin, key), PersistentDataType.STRING, value);

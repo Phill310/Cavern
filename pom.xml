@@ -6,7 +6,7 @@
 
     <groupId>me.phill310</groupId>
     <artifactId>Cavern</artifactId>
-    <version>1.0</version>
+    <version>2.0</version>
     <packaging>jar</packaging>
 
     <name>Cavern</name>
@@ -24,8 +24,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
                 <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
+                    <source>9</source>
+                    <target>9</target>
                 </configuration>
             </plugin>
             <plugin>
@@ -56,8 +56,8 @@
                             <goal>copy</goal>
                         </goals>
                         <configuration>
-                            <sourceFile>target/Cavern-1.0.jar</sourceFile>
-                            <destinationFile>C:/Users/malib/OneDrive/Desktop/Minecraft Server/plugins/Cavern-1.0.jar</destinationFile>
+                            <sourceFile>target/Cavern-2.0.jar</sourceFile>
+                            <destinationFile>C:\Users\malib\OneDrive\Desktop\1.20.2 Mc Server\plugins\Cavern-2.0.jar</destinationFile>
                         </configuration>
                     </execution>
                 </executions>
@@ -90,7 +90,7 @@
         <dependency>
             <groupId>io.papermc.paper</groupId>
             <artifactId>paper-api</artifactId>
-            <version>1.19-R0.1-SNAPSHOT</version>
+            <version>1.20.2-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

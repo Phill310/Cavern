@@ -4,6 +4,7 @@ import me.phill310.cavern.Main;
 import me.phill310.cavern.Utils;
 import me.phill310.cavern.objects.Ore;
 import me.phill310.cavern.objects.OreManager;
+import me.phill310.cavern.objects.Pickaxe;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -22,9 +23,11 @@ public class BlockBreak implements Listener {
         Ore ore = OreManager.getOre(block.getType());
         Player player = event.getPlayer();
         event.setCancelled(true);
+        Pickaxe pick = new Pickaxe(player.getInventory().getItemInMainHand());
+        if (!pick.isPick()) return;
         block.setType(Material.BEDROCK);
         if (ore.hasDrop()) {
-            Utils.give(player, ore.getDrop());
+            Utils.give(player, ore.getDrop().asQuantity(pick.getFortune() + 1));
         }
         Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> block.setType(ore.getType()), (long) ore.getCooldown()*20);
     }
