@@ -37,6 +37,10 @@ public class CommandCavern implements TabExecutor {
                 }
             } else if (args[0].equalsIgnoreCase("reload")) {
                 if (args.length > 1) {
+                    if (args[1].equalsIgnoreCase("all") || args[1].equalsIgnoreCase("config")) {
+                        plugin.reloadConfig();
+                        sender.sendMessage(Component.text("Config has been reloaded"));
+                    }
                     if (args[1].equalsIgnoreCase("all") || args[1].equalsIgnoreCase("ore")) {
                         OreManager.setup();
                         sender.sendMessage(Component.text("Ores have been reloaded!"));
@@ -45,12 +49,9 @@ public class CommandCavern implements TabExecutor {
                         ProfileManager.setup();
                         sender.sendMessage(Component.text("Profiles have been reloaded!"));
                     }
-                    if (args[1].equalsIgnoreCase("all") || args[1].equalsIgnoreCase("config")) {
-                        plugin.reloadConfig();
-                        sender.sendMessage(Component.text("Config has been reloaded"));
-                    }
                     if (args[1].equalsIgnoreCase("all") || args[1].equalsIgnoreCase("tags")) {
                         TagManager.reload();
+                        sender.sendMessage(Component.text("Tags have been reloaded!"));
                     }
                 } else {
                     plugin.reloadConfig();
@@ -75,6 +76,7 @@ public class CommandCavern implements TabExecutor {
         } else if (args.length == 2) {
             if (args[0].equalsIgnoreCase("reload")) {
                 commands.add("config");
+                commands.add("tags");
             }
             Collections.addAll(commands, "ore", "profile", "all");
             StringUtil.copyPartialMatches(args[1], commands, completions);
