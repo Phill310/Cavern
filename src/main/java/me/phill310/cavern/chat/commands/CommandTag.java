@@ -108,27 +108,27 @@ public class CommandTag implements TabExecutor, Listener {
                     return true;
                 }
                 if (!TagManager.isTag(args[2])) {
-                    commandSender.sendMessage(args[2] + " is not a valid tag!");
+                    commandSender.sendMessage(Component.text(args[2] + " is not a valid tag!"));
                     return true;
                 }
                 Profile profile = ProfileManager.loadProfile(target.getUniqueId());
                 if (args[0].equalsIgnoreCase("give")) {
                     if (profile.hasTag(args[2])) {
-                        commandSender.sendMessage(target.getName() + "already has this tag!");
+                        commandSender.sendMessage(Component.text(target.getName() + "already has this tag!"));
                     } else {
                         TagManager.giveTag(target, args[2]);
-                        commandSender.sendMessage("Gave " + target.getName() + " tag " + args[2]);
+                        commandSender.sendMessage(Component.text("Gave " + target.getName() + " tag " + args[2]));
                     }
                 } else if (args[0].equalsIgnoreCase("remove")) {
                     if (!profile.hasTag(args[2])) {
-                        commandSender.sendMessage(target.getName() + " doesn't have this tag!");
+                        commandSender.sendMessage(Component.text(target.getName() + " doesn't have this tag!"));
                     } else {
                         TagManager.takeTag(target, args[2]);
-                        commandSender.sendMessage("Removed " + target.getName() + "'s tag " + args[2]);
+                        commandSender.sendMessage(Component.text("Removed " + target.getName() + "'s tag " + args[2]));
                     }
                 }
             } else {
-                commandSender.sendMessage("/tag <give/remove> <tag>");
+                commandSender.sendMessage(Component.text("/tag <give/remove> <tag>"));
                 return true;
             }
         }

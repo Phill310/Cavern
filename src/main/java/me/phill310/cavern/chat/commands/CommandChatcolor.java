@@ -4,6 +4,7 @@ import me.phill310.cavern.Main;
 import me.phill310.cavern.Utils;
 import me.phill310.cavern.objects.Profile;
 import me.phill310.cavern.objects.ProfileManager;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -153,37 +154,37 @@ public class CommandChatcolor implements Listener, TabExecutor {
                 }
                 String colorName = String.join(" ", Arrays.copyOfRange(args, 2, args.length)).toLowerCase();
                 if (!names.containsKey(colorName)) {
-                    sender.sendMessage(colorName + " is not a valid chatcolor!");
+                    sender.sendMessage(Component.text(colorName + " is not a valid chatcolor!"));
                     return true;
                 }
                 Profile profile = ProfileManager.loadProfile(target.getUniqueId());
                 String color = names.get(colorName);
                 if (args[0].equalsIgnoreCase("give")) {
                     if (profile.hasColor(color)) {
-                        sender.sendMessage(target.getName() + "already has this chatcolor!");
+                        sender.sendMessage(Component.text(target.getName() + "already has this chatcolor!"));
                     } else {
                         profile.addColor(color);
                         ProfileManager.saveProfile(profile);
-                        sender.sendMessage("Gave " + target.getName() + " the chatcolor " + colorName);
+                        sender.sendMessage(Component.text("Gave " + target.getName() + " the chatcolor " + colorName));
                         target.sendMessage(mm.deserialize(("<gray>[<yellow>Chat<gray>] <white>You have unlocked a new chatcolor: <" + color + ">" + colorName).replace("<random>", "")));
                     }
                 } else if (args[0].equalsIgnoreCase("remove")) {
                     if (!profile.hasColor(color)) {
-                        sender.sendMessage(target.getName() + " doesn't have this chatcolor!");
+                        sender.sendMessage(Component.text(target.getName() + " doesn't have this chatcolor!"));
                     } else {
                         profile.removeColor(color);
                         ProfileManager.saveProfile(profile);
-                        sender.sendMessage("Removed " + target.getName() + "'s chatcolor " + colorName);
+                        sender.sendMessage(Component.text("Removed " + target.getName() + "'s chatcolor " + colorName));
                         target.sendMessage(mm.deserialize(("<gray>[<yellow>Chat<gray>] <white>You have lost the chatcolor: <" + color + ">" + colorName).replace("<random>", "")));
                     }
                 } else if (args[0].equalsIgnoreCase("set")) {
                     profile.setChatcolor(colorName);
                     ProfileManager.saveProfile(profile);
-                    sender.sendMessage(target.getName() + "'s chatcolor is now " + colorName);
+                    sender.sendMessage(Component.text(target.getName() + "'s chatcolor is now " + colorName));
                     target.sendMessage(mm.deserialize("<gray>[<yellow>Chat<gray>] <" + color + ">This is your new chatcolor!"));
                 }
             } else {
-                sender.sendMessage("/chatcolor <give/remove/set> <player> <color>");
+                sender.sendMessage(Component.text("/chatcolor <give/remove/set> <player> <color>"));
                 return true;
             }
         }

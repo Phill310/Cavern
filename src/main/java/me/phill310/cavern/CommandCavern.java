@@ -3,6 +3,7 @@ package me.phill310.cavern;
 import me.phill310.cavern.objects.OreManager;
 import me.phill310.cavern.objects.ProfileManager;
 import me.phill310.cavern.objects.TagManager;
+import net.kyori.adventure.text.Component;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
@@ -23,30 +24,30 @@ public class CommandCavern implements TabExecutor {
                 if (args.length > 1) {
                     if (args[1].equalsIgnoreCase("all") || args[1].equalsIgnoreCase("ore")) {
                         OreManager.saveAll();
-                        sender.sendMessage("Ores have been saved!");
+                        sender.sendMessage(Component.text("Ores have been saved!"));
                     }
                     if (args[1].equalsIgnoreCase("all") || args[1].equalsIgnoreCase("profile")) {
                         ProfileManager.saveAll();
-                        sender.sendMessage("Profiles have been saved!");
+                        sender.sendMessage(Component.text("Profiles have been saved!"));
                     }
                 } else {
                     ProfileManager.saveAll();
                     OreManager.saveAll();
-                    sender.sendMessage("Everything has been saved!");
+                    sender.sendMessage(Component.text("Everything has been saved!"));
                 }
             } else if (args[0].equalsIgnoreCase("reload")) {
                 if (args.length > 1) {
                     if (args[1].equalsIgnoreCase("all") || args[1].equalsIgnoreCase("ore")) {
                         OreManager.setup();
-                        sender.sendMessage("Ores have been reloaded!");
+                        sender.sendMessage(Component.text("Ores have been reloaded!"));
                     }
                     if (args[1].equalsIgnoreCase("all") || args[1].equalsIgnoreCase("profile")) {
                         ProfileManager.setup();
-                        sender.sendMessage("Profiles have been reloaded!");
+                        sender.sendMessage(Component.text("Profiles have been reloaded!"));
                     }
                     if (args[1].equalsIgnoreCase("all") || args[1].equalsIgnoreCase("config")) {
                         plugin.reloadConfig();
-                        sender.sendMessage("Config has been reloaded");
+                        sender.sendMessage(Component.text("Config has been reloaded"));
                     }
                     if (args[1].equalsIgnoreCase("all") || args[1].equalsIgnoreCase("tags")) {
                         TagManager.reload();
@@ -56,7 +57,7 @@ public class CommandCavern implements TabExecutor {
                     ProfileManager.setup();
                     OreManager.setup();
                     TagManager.reload();
-                    sender.sendMessage("Everything has been reloaded!");
+                    sender.sendMessage(Component.text("Everything has been reloaded!"));
                 }
             }
         }

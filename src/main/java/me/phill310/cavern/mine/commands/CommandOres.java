@@ -20,6 +20,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CommandOres implements TabExecutor, Listener {
@@ -36,7 +37,7 @@ public class CommandOres implements TabExecutor, Listener {
                 open(player);
             }
         } else {
-            commandSender.sendMessage("That aint gonna work chief");
+            commandSender.sendMessage(Component.text("That aint gonna work chief"));
         }
         return true;
     }
@@ -62,6 +63,7 @@ public class CommandOres implements TabExecutor, Listener {
             if (player.hasPermission("cavern.admin")) {
                 ItemMeta meta = item.getItemMeta();
                 List<Component> lore = meta.lore();
+                if (lore == null) lore = new ArrayList<>();
                 lore.add(Component.space());
                 lore.add(mm.deserialize("<!i><aqua>Right-Click to set drop!"));
                 lore.add(mm.deserialize("<!i><red>Left-Click to remove!"));
@@ -92,6 +94,7 @@ public class CommandOres implements TabExecutor, Listener {
         event.setCancelled(true);
         Player player = (Player) event.getWhoClicked();
         ItemStack item = event.getCurrentItem();
+        if (item == null) return;
         if (player.hasPermission("cavern.admin")) {
             if (Utils.readString(item, "gen").equals("demoGen")) {
                 if (event.isLeftClick()) {
@@ -103,7 +106,7 @@ public class CommandOres implements TabExecutor, Listener {
                         player.sendMessage(mm.deserialize(Utils.toTitleCase(ore.getType().toString().toLowerCase().replace("_", " ")) + " will not drop anything."));
                         ore.setDrop(null);
                     } else {
-                        ore.setDrop(player.getInventory().getItemInMainHand().clone());
+                        ore.setDrop(player.getInventory().getItemInMainHand());
                         player.sendMessage(mm.deserialize(Utils.toTitleCase(ore.getType().toString().toLowerCase().replace("_", " ")) + " will now drop " + ore.getDrop().getType().toString().toLowerCase().replace("_", " ")));
                     }
                     OreManager.saveOre(ore);
