@@ -3,6 +3,7 @@ package me.phill310.cavern;
 import me.phill310.cavern.chat.PlayerChat;
 import me.phill310.cavern.chat.commands.CommandChatcolor;
 import me.phill310.cavern.chat.commands.CommandTag;
+import me.phill310.cavern.guis.master.GUIManager;
 import me.phill310.cavern.objects.OreManager;
 import me.phill310.cavern.objects.ProfileManager;
 import me.phill310.cavern.objects.TagManager;
@@ -25,6 +26,8 @@ public final class Main extends JavaPlugin {
 
     public final PluginManager manager = getServer().getPluginManager();
 
+    private static GUIManager guiManager;
+
     public static Random random = new Random();
 
     @Override
@@ -44,6 +47,7 @@ public final class Main extends JavaPlugin {
             return;
         }
 
+        guiManager = new GUIManager();
 
         //chat
         manager.registerEvents(new PlayerChat(), this);
@@ -112,5 +116,9 @@ public final class Main extends JavaPlugin {
 
     public static Chat getChat() {
         return chat;
+    }
+
+    public static GUIManager getGuiManager() {
+        return guiManager;
     }
 }
