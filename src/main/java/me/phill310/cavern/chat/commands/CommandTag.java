@@ -1,33 +1,24 @@
 package me.phill310.cavern.chat.commands;
 
-import me.phill310.cavern.Utils;
+import me.phill310.cavern.Main;
+import me.phill310.cavern.guis.tag.TagGUI;
 import me.phill310.cavern.objects.Profile;
 import me.phill310.cavern.objects.ProfileManager;
-import me.phill310.cavern.objects.Tag;
 import me.phill310.cavern.objects.TagManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemFlag;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 
 public class CommandTag implements TabExecutor, Listener {
@@ -95,10 +86,12 @@ public class CommandTag implements TabExecutor, Listener {
                         player.sendMessage(mm.deserialize("<red>That is not a tag!"));
                     }
                 } else {
-                    open(player);
+                    TagGUI gui = new TagGUI("tag", MiniMessage.miniMessage().deserialize("<blue><bold>Tags"), Main.getGuiManager());
+                    Main.getGuiManager().openGUI(player, gui);
                 }
             } else {
-                open(player);
+                TagGUI gui = new TagGUI("tag", MiniMessage.miniMessage().deserialize("<blue><bold>Tags"), Main.getGuiManager());
+                Main.getGuiManager().openGUI(player, gui);
             }
         } else {
             if (args.length >= 3) {
@@ -166,99 +159,6 @@ public class CommandTag implements TabExecutor, Listener {
         StringUtil.copyPartialMatches(args[args.length-1], commands, completions);
         Collections.sort(completions);
         return completions;
-    }
-
-
-    private void open(Player player) {
-        open(player, 0);
-    }
-    private void open(Player player, int page) {
-        Profile profile = ProfileManager.loadProfile(player.getUniqueId());
-        int size = (int) ((Math.ceil(((double) TagManager.getTags().size())/9d)+1))*9;
-        boolean next = false;
-        if (size >= 54) {
-            size = 54;
-            next = true;
-        }
-        Component name = mm.deserialize("<blue><b>Tags (Page " + page + ")");
-        if (page == 0) name = mm.deserialize("<blue><b>Tags");
-        Inventory inv = Bukkit.createInventory(null, size, name);
-        LinkedList<ItemStack> locked = new LinkedList<>();
-        for (String tagName : TagManager.getTags()) {
-            ItemStack item;
-            Tag tag;
-            if (profile.hasTag(tagName)) {
-                tag = profile.getTag(tagName);
-                item = new ItemStack(Material.NAME_TAG);
-            } else {
-                tag = TagManager.getTag(tagName);
-                item = new ItemStack(Material.GRAY_DYE);
-            }
-
-            ItemMeta meta = item.getItemMeta();
-            meta.displayName(mm.deserialize("<!i>").append(tag.getDisplay()));
-            List<Component> lore = new ArrayList<>();
-            lore.add(mm.deserialize("<!i><gray>").append(tag.getDescription()));
-            lore.add(mm.deserialize("<!i><gray>◆ <#32a8a4>Date Released: <white>" + tag.getCreatedFormatted()));
-            if (profile.hasTag(tagName)) {
-                lore.add(mm.deserialize("<!i><gray>◆ <#32a8a4>Date Obtained: <white>" + tag.getUnlockedFormatted()));
-                if (profile.hasSelectedTag() && tag.equals(profile.getSelectedTag())) {
-                    lore.add(mm.deserialize("<!i><red>Click to unequip!"));
-                    meta.addEnchant(Enchantment.LUCK, 1, true);
-                    meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-                } else {
-                    lore.add(mm.deserialize("<!i><green>Click to equip!"));
-                }
-            } else {
-                lore.add(Component.space());
-                lore.add(mm.deserialize("<!i><red>You have not unlocked this tag!"));
-            }
-
-            meta.lore(lore);
-            item.setItemMeta(meta);
-            if (profile.hasTag(tagName)) {
-                inv.addItem(Utils.addInt(Utils.addString(item, "tag", tag.getName()), "page", page));
-            } else {
-                locked.add(Utils.addInt(Utils.addString(item, "tag", tag.getName()), "page", page));
-            }
-        }
-        for (ItemStack item : locked) {
-            inv.addItem(item);
-        }
-        ItemStack glass = Utils.addString(Utils.buildItem(Material.BLACK_STAINED_GLASS_PANE, 1, ""), "inv", "tags");
-        for (int i = size-9; i < size; i++) {
-            inv.setItem(i, glass);
-        }
-        if (page > 0) inv.setItem(size-8, Utils.addInt(Utils.buildItem(Material.ARROW, 1, "<blue>Back to page " + (page-1)), "page", page-1));
-        if (next) {
-            inv.setItem(52, Utils.addInt(Utils.buildItem(Material.ARROW, 1, "<blue>Back to page " + (page+1)), "page", page+1));
-        }
-        player.openInventory(inv);
-    }
-
-    @EventHandler
-    public void onClick(InventoryClickEvent event) {
-        Inventory inv = event.getClickedInventory();
-        if (inv == null) return;
-        ItemStack testItem = inv.getItem(inv.getSize()-8);
-        if (testItem == null) return;
-        if ((Utils.readString(testItem, "inv") == null) || (!Utils.readString(testItem, "inv").equals("tags"))) return;
-        event.setCancelled(true);
-        Player player = (Player) event.getWhoClicked();
-        ItemStack item = event.getCurrentItem();
-        if (Utils.readString(item, "tag") != null) {
-            Profile profile = ProfileManager.loadProfile(player.getUniqueId());
-            Tag clicked = profile.getTag(Utils.readString(item, "tag"));
-            if (profile.hasSelectedTag() && clicked.equals(profile.getSelectedTag())) {
-                profile.setSelectedTag(null);
-            } else {
-                profile.setSelectedTag(clicked);
-            }
-            ProfileManager.saveProfile(profile);
-        }
-        if (Utils.readInt(item, "page") != null) {
-            open(player, Utils.readInt(item, "page"));
-        }
     }
 
 }
