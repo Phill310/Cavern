@@ -5,6 +5,9 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 
 import java.util.List;
 
+/**
+ * Implementation of Entry to flip between pages in a PaginatedGUi
+ */
 public class ArrowEntry extends Entry {
     public ArrowEntry(Material material, String name, List<String> lore, int slot, PaginatedGUI gui) {
         super(material, name, lore, 1, slot);

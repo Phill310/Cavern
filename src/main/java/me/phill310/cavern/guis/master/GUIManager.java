@@ -14,14 +14,28 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Open and update guis
+ */
 public class GUIManager {
     private final MiniMessage mm = MiniMessage.miniMessage();
     private final Main plugin = Main.getPlugin(Main.class);
+
+    /**
+     * Open a gui to a player
+     * @param player player being shown gui
+     * @param gui gui to be shown
+     */
     public void openGUI(Player player, GUI gui) {
         plugin.getServer().getPluginManager().registerEvents(new GUIListener(gui), plugin);
         player.openInventory(setupInventory(gui));
     }
 
+    /***
+     * Update an open inventory by setting all the slots to their entry again
+     * @param inventory inventory being updated
+     * @param gui gui to get entries from
+     */
     public void updateGUI(Inventory inventory, GUI gui) {
         for (Entry entry : gui.getEntries().values()) {
             if (entry.getSlot() < gui.getSize()) inventory.setItem(entry.getSlot(), buildEntry(entry));
@@ -29,7 +43,11 @@ public class GUIManager {
         gui.setInventory(inventory);
     }
 
-
+    /**
+     * Create and populate an inventory using data from a gui
+     * @param gui gui to get items from
+     * @return populated inventory
+     */
     private Inventory setupInventory(GUI gui) {
         Inventory inventory = Bukkit.createInventory(null, gui.getSize(), gui.getTitle());
 
@@ -41,6 +59,11 @@ public class GUIManager {
         return inventory;
     }
 
+    /**
+     * Create an item from an entry
+     * @param entry entry to be converted
+     * @return item representation of entry
+     */
     private ItemStack buildEntry(Entry entry) {
         ItemStack item = new ItemStack(entry.getMaterial(), entry.getQuantity());
         ItemMeta meta = item.getItemMeta();
