@@ -61,7 +61,7 @@ public class PlayerChat implements Listener {
             Component msg = message.hoverEvent(null);
             msg = mm.deserialize("<" + profile.getChatcolor() + ">" + (profile.isBold() ? "<bold>" : "") + "<msg>", Placeholder.component("msg", msg));
             if (source.hasPermission("chat.admin")) {
-                msg = mm.deserialize("<reset><" + profile.getChatcolor() + ">" + ((TextComponent) message).content());
+                msg = mm.deserialize("<reset><" + profile.getChatcolor() + ">" + (profile.isBold() ? "<bold>" : "") + ((TextComponent) message).content());
             }
 
             output = output.append(mm.deserialize("<gray><b>≫</b> ")).append(msg);

@@ -1,25 +1,17 @@
 package me.phill310.cavern.chat.commands;
 
 import me.phill310.cavern.Main;
-import me.phill310.cavern.Utils;
+import me.phill310.cavern.guis.chatcolor.ColorGUI;
 import me.phill310.cavern.objects.Profile;
 import me.phill310.cavern.objects.ProfileManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemFlag;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -28,31 +20,27 @@ import java.util.*;
 
 public class CommandChatcolor implements Listener, TabExecutor {
     private final MiniMessage mm = MiniMessage.miniMessage();
-    private final HashMap<Material, String> colors = new HashMap<>();
     private final HashMap<String, String> names = new HashMap<>();
 
     public CommandChatcolor() {
-        colors.put(Material.REDSTONE, "dark_red");
-        colors.put(Material.RED_DYE, "red");
-        colors.put(Material.ORANGE_DYE, "gold");
-        colors.put(Material.YELLOW_DYE, "yellow");
-        colors.put(Material.LIME_DYE, "green");
-        colors.put(Material.GREEN_DYE, "dark_green");
-        colors.put(Material.LIGHT_BLUE_DYE, "aqua");
-        colors.put(Material.CYAN_DYE, "dark_aqua");
-        colors.put(Material.BLUE_DYE, "blue");
-        colors.put(Material.PINK_DYE, "light_purple");
-        colors.put(Material.PURPLE_DYE, "dark_purple");
-        colors.put(Material.BROWN_DYE, "#964B00");
-        colors.put(Material.WHITE_DYE, "white");
-        colors.put(Material.LIGHT_GRAY_DYE, "gray");
-        colors.put(Material.GRAY_DYE, "dark_gray");
-        colors.put(Material.SUSPICIOUS_STEW, "random");
-        colors.put(Material.DRAGON_BREATH, "rainbow");
-        colors.put(Material.BEACON, "bold");
-        for (Material type : colors.keySet()) {
-            names.put(nameFixer(type), colors.get(type));
-        }
+        names.put("dark red", "dark_red");
+        names.put("red", "red");
+        names.put("orange", "gold");
+        names.put("yellow", "yellow");
+        names.put("lime", "green");
+        names.put("green", "dark_green");
+        names.put("light blue", "aqua");
+        names.put("cyan", "dark_aqua");
+        names.put("blue", "blue");
+        names.put("pink", "light_purple");
+        names.put("purple", "dark_purple");
+        names.put("brown", "#964B00");
+        names.put("white", "white");
+        names.put("light gray", "gray");
+        names.put("gray", "dark_gray");
+        names.put("random", "random");
+        names.put("rainbow", "rainbow");
+        names.put("bold", "bold");
     }
 
     @Override
@@ -140,10 +128,14 @@ public class CommandChatcolor implements Listener, TabExecutor {
                         return true;
                     }
                 } else {
-                    open(player);
+                    //open(player);
+                    ColorGUI gui = new ColorGUI("color", 54, MiniMessage.miniMessage().deserialize("<dark_gray>Chatcolors"), Main.getGuiManager());
+                    Main.getGuiManager().openGUI(player, gui);
                 }
             } else {
-                open(player);
+                //open(player);
+                ColorGUI gui = new ColorGUI("color", 54, MiniMessage.miniMessage().deserialize("<dark_gray>Chatcolors"), Main.getGuiManager());
+                Main.getGuiManager().openGUI(player, gui);
             }
         } else {
             if (args.length >= 3) {
@@ -213,12 +205,11 @@ public class CommandChatcolor implements Listener, TabExecutor {
             }
         } else if (args.length == 3) {
             Profile profile = ProfileManager.loadProfile(Bukkit.getPlayerUniqueId(args[1]));
-            for (Material item : colors.keySet()) {
-                String name = nameFixer(item);
-                if (profile.hasColor(colors.get(item))) {
-                    if (args[0].equalsIgnoreCase("remove")) commands.add(name);
+            for (String key : names.keySet()) {
+                if (profile.hasColor(names.get(key))) {
+                    if (args[0].equalsIgnoreCase("remove")) commands.add(key);
                 } else {
-                    if (args[0].equalsIgnoreCase("give")) commands.add(name);
+                    if (args[0].equalsIgnoreCase("give")) commands.add(key);
                 }
             }
         }
@@ -226,159 +217,5 @@ public class CommandChatcolor implements Listener, TabExecutor {
         StringUtil.copyPartialMatches(args[args.length-1], commands, completions);
         Collections.sort(completions);
         return completions;
-    }
-
-    private void open(Player player) {
-        Inventory inv = Bukkit.createInventory(null, 54,  mm.deserialize("<dark_gray>Chatcolors"));
-
-        ItemStack glass = Utils.addString(Utils.buildItem(Material.BLACK_STAINED_GLASS_PANE, 1, ""), "inv", "chatcolors");
-        for (int i = 0; i < 54; i++) {
-            inv.setItem(i, glass);
-        }
-
-        Profile profile = ProfileManager.loadProfile(player.getUniqueId());
-        inv.setItem(10, dye(profile, Material.REDSTONE));
-        inv.setItem(11, dye(profile, Material.RED_DYE));
-        inv.setItem(12, dye(profile, Material.ORANGE_DYE));
-        inv.setItem(13, dye(profile, Material.YELLOW_DYE));
-        inv.setItem(14, dye(profile, Material.LIME_DYE));
-        inv.setItem(15, dye(profile, Material.GREEN_DYE));
-        inv.setItem(16, dye(profile, Material.LIGHT_BLUE_DYE));
-        inv.setItem(20, dye(profile, Material.CYAN_DYE));
-        inv.setItem(21, dye(profile, Material.BLUE_DYE));
-        inv.setItem(22, dye(profile, Material.PINK_DYE));
-        inv.setItem(23, dye(profile, Material.PURPLE_DYE));
-        inv.setItem(24, dye(profile, Material.BROWN_DYE));
-        inv.setItem(30, dye(profile, Material.WHITE_DYE));
-        inv.setItem(31, dye(profile, Material.LIGHT_GRAY_DYE));
-        inv.setItem(32, dye(profile, Material.GRAY_DYE));
-
-
-
-        String color = randColor();
-        String lore;
-        String lore2 = "";
-        boolean tag = false;
-        if (profile.hasColor("random")) {
-            if (profile.getChatcolor().startsWith("c:")) {
-                lore2 = "<green>Active";
-            }
-            lore = "<gray>Click to set your chatcolor to <" + color + ">" + color.replace("c:", "");
-            tag = true;
-        } else {
-            lore = "<red>Locked";
-        }
-        ItemStack rand = Utils.buildItem(Material.SUSPICIOUS_STEW, 1, "<" + color + ">Random Color", lore, lore2);
-        if (tag) Utils.addString(rand, "color", color);
-        inv.setItem(37, rand);
-
-        ItemStack rainbow = new ItemStack(Material.DRAGON_BREATH, 1);
-        ItemMeta rMeta = rainbow.getItemMeta();
-        rMeta.displayName(mm.deserialize("<!i><rainbow>Rainbow Chat"));
-        if (profile.hasColor("rainbow")) {
-
-            if (profile.getChatcolor().equalsIgnoreCase("rainbow")) {
-                rMeta.lore(Collections.singletonList(mm.deserialize("<!i><green>Active")));
-                rMeta.addEnchant(Enchantment.ARROW_INFINITE, 0, true);
-                rMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-            } else {
-                rMeta.lore(Collections.singletonList(mm.deserialize("<!i><gray>Click to set your chatcolor to <rainbow>Rainbow")));
-                Utils.addString(rMeta, "color", "rainbow");
-            }
-        } else {
-            rMeta.lore(Collections.singletonList(mm.deserialize("<!i><red>Locked")));
-        }
-        rainbow.setItemMeta(rMeta);
-        inv.setItem(40, rainbow);
-
-        if (profile.hasColor("bold")) {
-            if (profile.isBold()) {
-                lore = "<red>Click to turn off";
-            } else {
-                lore = "<green>Click to turn on";
-            }
-        } else {
-            lore = "<red>Locked";
-        }
-        ItemStack bold = Utils.buildItem(Material.BEACON, 1, "<b><white>Bold", "<gray>Make your chat <b>bold", lore);
-        if (profile.hasColor("bold")) {
-            Utils.addString(bold, "toggle", "yep");
-            if (profile.isBold()) {
-                ItemMeta meta = bold.getItemMeta();
-                meta.addEnchant(Enchantment.ARROW_INFINITE, 0, true);
-                meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-                bold.setItemMeta(meta);
-            }
-        }
-        inv.setItem(43, bold);
-
-        player.openInventory(inv);
-    }
-
-    @EventHandler
-    public void onClick(InventoryClickEvent event) {
-        Inventory inv = event.getClickedInventory();
-        if (inv == null) return;
-        ItemStack testItem = inv.getItem(53);
-        if (testItem == null) return;
-        if ((Utils.readString(testItem, "inv") == null) || (!Utils.readString(testItem, "inv").equals("chatcolors"))) return;
-        event.setCancelled(true);
-        Player player = (Player) event.getWhoClicked();
-        ItemStack item = event.getCurrentItem();
-        if (Utils.readString(item, "color") != null) {
-            Profile profile = ProfileManager.loadProfile(player.getUniqueId());
-            profile.setChatcolor(Utils.readString(item, "color"));
-            player.sendMessage(mm.deserialize("<gray>[<yellow>Chat<gray>] <" + profile.getChatcolor() + ">This is now your chatcolor"));
-            ProfileManager.saveProfile(profile);
-            open(player);
-        }
-        if (Utils.readString(item, "toggle") != null) {
-            Profile profile = ProfileManager.loadProfile(player.getUniqueId());
-            profile.toggleBold();
-            if (profile.isBold()) {
-                player.sendMessage(mm.deserialize("<gray>[<yellow>Chat<gray>] <white>You chat will now be bold"));
-            } else {
-                player.sendMessage(mm.deserialize("<gray>[<yellow>Chat<gray>] <white>You chat will no longer be bold"));
-            }
-            ProfileManager.saveProfile(profile);
-            open(player);
-        }
-    }
-
-    private ItemStack dye(Profile profile, Material type) {
-        ItemStack item = new ItemStack(type);
-        String name = Utils.toTitleCase(nameFixer(type));
-        String color = colors.get(type);
-        ItemMeta meta = item.getItemMeta();
-        meta.displayName(mm.deserialize("<!i><" + color + ">" + name));
-        if (profile.hasColor(color)) {
-            if (profile.getChatcolor().equalsIgnoreCase(color)) {
-                meta.lore(Collections.singletonList(mm.deserialize("<!i><green>Active")));
-                meta.addEnchant(Enchantment.ARROW_INFINITE, 0, true);
-                meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-            } else {
-                meta.lore(Collections.singletonList(mm.deserialize("<!i><gray>Click to set your chatcolor to <" + color + ">" + name)));
-                Utils.addString(meta, "color", color);
-            }
-        } else {
-            meta.lore(Collections.singletonList(mm.deserialize("<!i><red>Locked")));
-        }
-        item.setItemMeta(meta);
-        return item;
-    }
-
-    private String randColor() {
-        return "c:" + String.format("#%06x", Main.random.nextInt(0xffffff + 1));
-    }
-
-    private String nameFixer(Material type) {
-        return type.toString()
-                .toLowerCase()
-                .replace("_dye", "")
-                .replace("redstone", "dark red")
-                .replace("suspicious_stew", "random")
-                .replace("dragon_breath", "rainbow")
-                .replace("beacon", "bold")
-                .replace("_", " ");
     }
 }
