@@ -6,9 +6,9 @@ ores:
 tags:
   og:
     released: 1688578200000
-    description: This tag is given to people who are active during the first season
+    description: <gray>This tag is given to people who are active during the first season
     display: <gray>[<yellow><b>OG</b><gray>]
   linked:
     released: 1688578200000
-    description: Unlocked after linking your discord and minecraft accounts
+    description: <gray>Unlocked after linking your discord and minecraft accounts
     display: <gray>[<blue>Linked<gray>]
